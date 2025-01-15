@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -26,14 +28,30 @@ public class XLSXreader {
 
             // workbook
             Workbook wb = new XSSFWorkbook(fileStream);
-
+            DataFormatter df = new DataFormatter();
 
             // sheet
             Sheet sheet = wb.getSheetAt(0);
 
-
             // iterate on rows
             Iterator<Row> rowIt = sheet.iterator();
+            int count = 0;
+            
+            Row currentRow;
+            Cell currentCell;
+            String temp;
+            while(rowIt.hasNext()){
+                currentRow = rowIt.next();
+                Iterator<Cell> cellIt = currentRow.cellIterator();
+                while(cellIt.hasNext()){
+                    currentCell = cellIt.next();
+                    temp = df.formatCellValue(currentCell);
+                    System.out.print(temp + " ");
+                    
+                }
+                System.out.println(" ");
+            }
+
 
 
         } catch (IOException e) {
