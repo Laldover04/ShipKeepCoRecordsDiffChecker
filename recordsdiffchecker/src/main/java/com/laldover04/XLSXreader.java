@@ -7,12 +7,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
-
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
@@ -20,7 +17,7 @@ public class XLSXreader {
     public static void main(String[] args) {
 
 
-        File file = new File("ServiceCodes_TAR.xlsx");
+        File file = new File("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_TAR.xlsx");
         try (FileInputStream fileStream = new FileInputStream(file)) {
             System.out.println("success");
             System.out.println("FileName: " + file.getName());
@@ -40,6 +37,7 @@ public class XLSXreader {
 
 
         } catch (IOException e) {
+            System.out.println("exception!");
             e.printStackTrace();
         }
 
