@@ -61,7 +61,9 @@ public class XLSXreader {
         while (rowIt.hasNext()) {
             row = rowIt.next();
             String key = df.formatCellValue(row.getCell(0)) + df.formatCellValue(row.getCell(1));
-
+            if(lookup.containsKey(key)){
+                System.out.println("dupe" );
+            }
             lookup.put(key, row);
         }
     }

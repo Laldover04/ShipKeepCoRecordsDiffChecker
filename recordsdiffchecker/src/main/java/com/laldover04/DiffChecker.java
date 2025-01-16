@@ -17,11 +17,9 @@ public class DiffChecker {
 	private final XLSXreader tarReader;
 	private final XLSXreader ecbReader;
     private final DataFormatter df;
-	private int count;
 
     public DiffChecker(String filePath){
-		count = 0;
-
+		
 		// Creating csv writer
 		File csvfile = new File(filePath);
 		try { 
@@ -40,53 +38,95 @@ public class DiffChecker {
 		tarReader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_TAR.xlsx");
 		ecbReader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_ECB.xlsx");
 		df = new DataFormatter();
-		checkDifferences();
+		
+		checkDifferencesTARHash();
+		checkDifferencesEBCBHash();
 	}
 
 	/*
-	 * Method to check the differences between the two files and add them to the csv
+	 * Method to check the differences between the two files and add them to the csv with tar as the hash, this version also checks for mismatched charges
 	 */
-	private void checkDifferences(){
+	private void checkDifferencesTARHash(){
 
-		Sheet tarSheet = tarReader.getSheet();
-		HashMap<String, Row> ecbHashMap = ecbReader.getHashMap();
+		Sheet ecbSheet = ecbReader.getSheet();
+		HashMap<String, Row> tarHashMap = tarReader.getHashMap();
 
-        Iterator<Row> rowIt = tarSheet.rowIterator();
+        Iterator<Row> ecbRowIt = ecbSheet.rowIterator();
         
         //Skip two header lines
-        rowIt.next();
-        rowIt.next();
+        ecbRowIt.next();
+        ecbRowIt.next();
 
         Row tarRow;
         Row ecbRow;
 
         //Iterate through all rows
-        while (rowIt.hasNext()) {
-            tarRow = rowIt.next();
+        while (ecbRowIt.hasNext()) {
+            ecbRow = ecbRowIt.next();
+
+			String spa = df.formatCellValue(ecbRow.getCell(0));
+            String serviceCode =  df.formatCellValue(ecbRow.getCell(1));
+
+			
+            // check that the transaction exists in tar
+			if(!tarHashMap.containsKey(spa + serviceCode)){
+				// if it doesn't exist report it
+				String ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
+				String ecbNewCharge = df.formatCellValue(ecbRow.getCell(5)).substring(4);
+				String[] nextLine = new String[]{spa, serviceCode, "Does Not Exist,", ecbCharge, "Does not Exist,", ecbNewCharge};
+					writer.writeNext(nextLine);
+
+				//We will get all contained errors on the first call, so only run the below portion if it is the first call of this method.
+			} else {
+
+            	tarRow = tarHashMap.get(spa + serviceCode);
+
+            	// charge columns
+            	String tarCharge = df.formatCellValue(tarRow.getCell(2));
+            	String ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
+				String tarNewCharge = df.formatCellValue(tarRow.getCell(4));
+				String ecbNewCharge = df.formatCellValue(ecbRow.getCell(5)).substring(4);
+
+            	if(!(tarCharge.equals(ecbCharge) && tarNewCharge.equals(ecbNewCharge))){
+               		String[] nextLine = new String[]{spa, serviceCode, tarCharge, ecbCharge, tarNewCharge, ecbNewCharge};
+					writer.writeNext(nextLine);
+            	}
+			}
+        }
+	}
+
+	/*
+	 * Method to check the differences between the two files and add them to the csv with ESB as the hash
+	 */
+	private void checkDifferencesEBCBHash(){
+
+		Sheet tarSheet = tarReader.getSheet();
+		HashMap<String, Row> ecbHashMap = ecbReader.getHashMap();
+
+        Iterator<Row> tarRowIt = tarSheet.rowIterator();
+        
+        //Skip two header lines
+        tarRowIt.next();
+        tarRowIt.next();
+
+        Row tarRow;
+
+        //Iterate through all rows
+        while (tarRowIt.hasNext()) {
+            tarRow = tarRowIt.next();
 
 			String spa = df.formatCellValue(tarRow.getCell(0));
             String serviceCode =  df.formatCellValue(tarRow.getCell(1));
 
 			
-            //check that the charges match
-            ecbRow = ecbHashMap.get(spa + serviceCode);
+            // check that the transaction exists in tar
 			if(!ecbHashMap.containsKey(spa + serviceCode)){
-				count++;
-				System.out.println(count + ": miss");
-				
+				// if it doesn't exist report it
+				String tarCharge = df.formatCellValue(tarRow.getCell(2));
+				String tarNewCharge = df.formatCellValue(tarRow.getCell(4));
+				String[] nextLine = new String[]{spa, serviceCode, tarCharge, "Does Not Exist,", tarNewCharge, "Does not Exist,"};
+					writer.writeNext(nextLine);
 			}
-
-            // charge columns
-            String tarCharge = df.formatCellValue(tarRow.getCell(2));
-            String ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
-			String newTarCharge = df.formatCellValue(tarRow.getCell(4));
-			String newEcbCharge = df.formatCellValue(ecbRow.getCell(5)).substring(4);
-
-            if(!(tarCharge.equals(ecbCharge) && newTarCharge.equals(newEcbCharge))){
-                String[] nextLine = new String[]{spa, serviceCode, tarCharge, ecbCharge, newTarCharge, newEcbCharge};
-				writer.writeNext(nextLine);
-            }	//26938 12.00,   126934 12.50
-				//28222 12.00,   28222 12.50
         }
 	}
 

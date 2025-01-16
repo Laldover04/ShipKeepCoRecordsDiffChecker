@@ -47,9 +47,6 @@ public class GUI implements ActionListener {
         frame.setSize(windowWidth, windowHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(panel);
-
-
-        //
         panel.setLayout(null);
 
 
@@ -115,8 +112,6 @@ public class GUI implements ActionListener {
 
 
         frame.setVisible(true);
-
-
     }
 
 
@@ -140,7 +135,7 @@ public class GUI implements ActionListener {
             } else {
                 searchResult = (tarRow[0] + "   " + tarRow[1] + "          " +  ecbRow[2] + "    " +  tarRow[2] + "       " +  tarRow[4]);
             }
-            resultLabel.setText(searchResult);  //XLSXreader.getRow()
+            resultLabel.setText(searchResult);
         }
     }
 
