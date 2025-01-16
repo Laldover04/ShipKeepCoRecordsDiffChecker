@@ -21,7 +21,6 @@ public class XLSXreader {
 
     public XLSXreader(String filePath) {
 
-        //TAR file hard coded
         File file = new File(filePath);
         try (FileInputStream fileStream = new FileInputStream(file)) {
 
@@ -37,9 +36,7 @@ public class XLSXreader {
 
             }
 
-
         } catch (IOException e) {
-            //System.out.println("exception!");
             e.printStackTrace();
         }
 
@@ -54,7 +51,6 @@ public class XLSXreader {
         // pass headers
         rowIt.next();
         rowIt.next();
-        //System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
         
         Row row;
         //Iterate through all rows

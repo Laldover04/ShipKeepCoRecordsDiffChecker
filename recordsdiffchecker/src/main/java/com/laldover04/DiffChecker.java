@@ -73,10 +73,10 @@ public class DiffChecker {
 				// if it doesn't exist report it
 				String ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
 				String ecbNewCharge = df.formatCellValue(ecbRow.getCell(5)).substring(4);
-				String[] nextLine = new String[]{spa, serviceCode, "Does Not Exist,", ecbCharge, "Does not Exist,", ecbNewCharge};
+				String[] nextLine = new String[]{spa, serviceCode, "Does Not Exist", ecbCharge, "Does not Exist", ecbNewCharge};
 					writer.writeNext(nextLine);
 
-				//We will get all contained errors on the first call, so only run the below portion if it is the first call of this method.
+				//We will get all contained mismatches on the first call, so only run the below portion if it is the first call of this method.
 			} else {
 
             	tarRow = tarHashMap.get(spa + serviceCode);
@@ -105,13 +105,13 @@ public class DiffChecker {
 
         Iterator<Row> tarRowIt = tarSheet.rowIterator();
         
-        //Skip two header lines
+        // Skip two header lines
         tarRowIt.next();
         tarRowIt.next();
 
         Row tarRow;
 
-        //Iterate through all rows
+        // Iterate through all rows
         while (tarRowIt.hasNext()) {
             tarRow = tarRowIt.next();
 
@@ -124,7 +124,7 @@ public class DiffChecker {
 				// if it doesn't exist report it
 				String tarCharge = df.formatCellValue(tarRow.getCell(2));
 				String tarNewCharge = df.formatCellValue(tarRow.getCell(4));
-				String[] nextLine = new String[]{spa, serviceCode, tarCharge, "Does Not Exist,", tarNewCharge, "Does not Exist,"};
+				String[] nextLine = new String[]{spa, serviceCode, tarCharge, "Does Not Exist", tarNewCharge, "Does not Exist"};
 					writer.writeNext(nextLine);
 			}
         }

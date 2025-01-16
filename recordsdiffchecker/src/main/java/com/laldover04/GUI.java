@@ -1,6 +1,7 @@
 package com.laldover04;
 
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 
 public class GUI implements ActionListener {
@@ -19,7 +23,6 @@ public class GUI implements ActionListener {
     private final JFrame frame;
     private final JPanel panel;
 
-    private final JLabel resultLabel;
     private final JLabel resultTitleLabel;
     private final JLabel titleLabel;
     private final JLabel transactionLookupLabel;
@@ -28,9 +31,12 @@ public class GUI implements ActionListener {
 
     private final JButton resetButton;
     private final JButton searchButton;
+    private final JButton clearSearchResults;
 
     private final JTextField spaInput;
     private final JTextField serviceCodeInput;
+    private JTextArea  lookupResultsArea;
+    private JScrollPane lResultsScrollPane;
 
     private final XLSXreader tarReader;
     private final XLSXreader ecbReader;
@@ -102,14 +108,26 @@ public class GUI implements ActionListener {
 
         // Lookup Results label
         resultTitleLabel = new JLabel("SPA      Service Code     Record Desc     Charge     New Charge");
-        resultTitleLabel.setBounds(windowWidth / 5 * 2, 85, 500, 25);
+        resultTitleLabel.setBounds(windowWidth / 5 * 2, 55, 500, 25);
         panel.add(resultTitleLabel);
+        
+        // Scrollable results area
+        lookupResultsArea = new JTextArea("");
+        lookupResultsArea.setBounds(windowWidth / 5 * 2, 85, 360, 500);
+        lookupResultsArea.setBorder(new LineBorder(Color.BLACK));
+        lookupResultsArea.setEditable(false);
 
-        // Lookup Results label
-        resultLabel = new JLabel("search results");
-        resultLabel.setBounds(windowWidth / 5 * 2 -20, 115, 500, 25);
-        panel.add(resultLabel);
+        lResultsScrollPane = new JScrollPane(lookupResultsArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        lResultsScrollPane.setBounds(windowWidth / 5 * 2, 85, 500, 500);
+        lResultsScrollPane.getViewport().setBackground(Color.WHITE);
+        lResultsScrollPane.getViewport().add(lookupResultsArea);
+        panel.add(lResultsScrollPane);
 
+        // Reset Button
+        clearSearchResults = new JButton("clear results");
+        clearSearchResults.setBounds(windowWidth / 5 * 2 + 370, 55, 120, 25);
+        clearSearchResults.addActionListener(this);
+        panel.add(clearSearchResults);
 
         frame.setVisible(true);
     }
@@ -118,12 +136,11 @@ public class GUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-
         // resets resultLabel and inputs on click
         if (e.getSource() == resetButton) {
             spaInput.setText("");
             serviceCodeInput.setText("");
-            resultLabel.setText("");
+            //resultLabel.setText("");
         } else if (e.getSource() == searchButton) {
             // sets result label to the input fields will have to be changed to use a
             // XLSXReader object to look up the row information.
@@ -135,7 +152,10 @@ public class GUI implements ActionListener {
             } else {
                 searchResult = (tarRow[0] + "   " + tarRow[1] + "          " +  ecbRow[2] + "    " +  tarRow[2] + "       " +  tarRow[4]);
             }
-            resultLabel.setText(searchResult);
+
+            lookupResultsArea.setText(lookupResultsArea.getText() + "\n" + searchResult);
+        } else if (e.getSource() == clearSearchResults){
+            lookupResultsArea.setText("");
         }
     }
 
