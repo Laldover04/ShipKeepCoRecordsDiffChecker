@@ -37,6 +37,8 @@ public class GUI implements ActionListener {
 
 
     public GUI() {
+        //Setup XLSX to be used by the buttons
+
         // Initial setup
         panel = new JPanel();
         frame = new JFrame();
@@ -125,7 +127,7 @@ public class GUI implements ActionListener {
         } else if (e.getSource() == searchButton) {
             // sets result label to the input fields will have to be changed to use a
             // XLSXReader object to look up the row information.
-            resultLabel.setText(spaInput.getText() + " " + serviceCodeInput.getText());
+            resultLabel.setText(spaInput.getText() + " " + serviceCodeInput.getText());  //XLSXreader.getRow()
         }
     }
 

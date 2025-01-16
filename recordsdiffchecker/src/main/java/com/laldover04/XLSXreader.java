@@ -18,17 +18,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class XLSXreader {
     private Sheet sheet;
     private DataFormatter df;
-    //CHANGE TODO CHANGE TO PRIVATE ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    public HashMap<String, Row> lookup;
+    private HashMap<String, Row> lookup;
 
     public XLSXreader(String filePath) {
 
         //TAR file hard coded
         File file = new File(filePath);
         try (FileInputStream fileStream = new FileInputStream(file)) {
-            // System.out.println("success");
-            // System.out.println("FileName: " + file.getName());
-            // System.out.println("Readable: " + file.canRead());
 
             // workbook
             try (Workbook wb = new XSSFWorkbook(fileStream)) {
@@ -55,21 +51,23 @@ public class XLSXreader {
      */
     private void sheetToHash(){
         Iterator<Row> rowIt = sheet.rowIterator();
-        int count = 0;
 
         // pass headers
         rowIt.next();
         rowIt.next();
-        System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
-
+        //System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
+        
+        Row row;
         //Iterate through all rows
         while (rowIt.hasNext()) {
-            Row row = rowIt.next();
+            row = rowIt.next();
             String key = df.formatCellValue(row.getCell(0)) + df.formatCellValue(row.getCell(1));
 
+            // if(lookup.containsKey(key)){
+            //     System.out.println(key + " : duplicate key");
+            // }
             lookup.put(key, row);
-            count++;
-            }
+        }
     }
 
     // /*
@@ -83,7 +81,7 @@ public class XLSXreader {
     //     if(index < sheet.getPhysicalNumberOfRows() && index > 1){
 
     //         Row currentRow = sheet.getRow(index);
-    //         //size of ECB rows
+    //         //size of ecb rows
     //         String[] row = new String[currentRow.getPhysicalNumberOfCells()];
             
     //         for(int i = 0; i < currentRow.getPhysicalNumberOfCells(); i++){
@@ -107,7 +105,7 @@ public class XLSXreader {
         if(lookup.containsKey(key)){
 
             Row currentRow = lookup.get(key);
-            //size of ECB rows
+            //size of ecb rows
             String[] row = new String[currentRow.getPhysicalNumberOfCells()];
             
             for(int i = 0; i < currentRow.getPhysicalNumberOfCells(); i++){
@@ -123,9 +121,70 @@ public class XLSXreader {
 
     
     /*
-     * Compares the rows from one input XLSX to this XLSX, with this as the source of truth.
+    CHANGe!+========================================================================================
+     * Compares the rows from one input XLSX to this XLSX, with TAR as the source of truth.
      */
-    public void reportDiff(XLSXreader other){
+    public void reportDiff(XLSXreader ecbReader){
+        //String key = df.formatCellValue(sheet.getRow(2).getCell(0));
+        //System.out.println(key);
+        // This gives you the SPA of the ecb xlsx file
+        //System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
 
+        //System.out.println("\n");
+
+        Sheet ecbSheet = ecbReader.getSheet();
+
+        Iterator<Row> ecbRowIt = ecbSheet.rowIterator();
+        
+        //Skip two header lines
+        ecbRowIt.next();
+        ecbRowIt.next();
+
+        Row tarRow;
+        Row ecbRow;
+        //Iterate through all rows
+        while (ecbRowIt.hasNext()) {
+            ecbRow = ecbRowIt.next();
+            String key = df.formatCellValue(ecbRow.getCell(0)) + df.formatCellValue(ecbRow.getCell(1));
+
+            if(lookup.containsKey(key)){
+                //check that the charges match
+                tarRow = lookup.get(key);
+
+                // charge columns
+                String tarCharge = df.formatCellValue(tarRow.getCell(4));
+                String ecbCharge = df.formatCellValue(ecbRow.getCell(5)).substring(1);
+
+
+                if(!tarCharge.equals(ecbCharge)){
+                    //add to csv after checking the next
+                }
+                
+                // new charge column
+                tarCharge = df.formatCellValue(tarRow.getCell(2));
+                ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
+                if(!tarCharge.equals(ecbCharge)){
+                    //add to csv with previous if it was false
+                }
+
+            } else {
+                //add to ecb key, 'key' from ecb does not exist in TAR
+            }
+        }
+        
+        //key = df.formatCellValue(row.getCell(0));
+        //System.out.println(key);
+        // This gives you the SPA of the ecb xlsx file
+        //System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
     }
+
+    /*
+     * returns the sheet
+     */
+    public Sheet getSheet(){
+        return sheet;
+    }
+
+
+    
 }
