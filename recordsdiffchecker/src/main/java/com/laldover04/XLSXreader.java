@@ -5,9 +5,9 @@ package com.laldover04;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,66 +16,107 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 public class XLSXreader {
-    public static void main(String[] args) {
+    Sheet sheet;
+    DataFormatter df;
+    HashMap<String, Row> lookup;
 
+    public XLSXreader(String filePath) {
 
-        File file = new File("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_TAR.xlsx");
+        //TAR file hard coded
+        File file = new File(filePath);
         try (FileInputStream fileStream = new FileInputStream(file)) {
-            System.out.println("success");
-            System.out.println("FileName: " + file.getName());
-            System.out.println("Readable: " + file.canRead());
-
+            // System.out.println("success");
+            // System.out.println("FileName: " + file.getName());
+            // System.out.println("Readable: " + file.canRead());
 
             // workbook
-            Workbook wb = new XSSFWorkbook(fileStream);
-            DataFormatter df = new DataFormatter();
+            try (Workbook wb = new XSSFWorkbook(fileStream)) {
 
-            // sheet
-            Sheet sheet = wb.getSheetAt(0);
-
-            // iterate on rows
-            Iterator<Row> rowIt = sheet.iterator();
-            int count = 0;
-            
-            Row currentRow;
-            Cell currentCell;
-            String temp;
-            while(rowIt.hasNext()){
-                currentRow = rowIt.next();
-                Iterator<Cell> cellIt = currentRow.cellIterator();
-                while(cellIt.hasNext()){
-                    currentCell = cellIt.next();
-                    temp = df.formatCellValue(currentCell);
-                    System.out.print(temp + " ");
-                    
-                }
-                System.out.println(" ");
+                df = new DataFormatter();
+                
+                // sheet
+                sheet = wb.getSheetAt(0);
+                sheetToHash();
             }
 
 
-
         } catch (IOException e) {
-            System.out.println("exception!");
+            //System.out.println("exception!");
             e.printStackTrace();
         }
 
 
     }
 
+    /*
+     * returns the row at the desired index, 
+     * if row is out of bounds it returns the header row at index 0.
+     * NO LONGER USED, REPLACE BY GETROW()
+     * 
+     */
+    public String[] rowToArray(int index) {
+        // rows 0 and 1 are headers
+        if(index < sheet.getPhysicalNumberOfRows() && index > 1){
 
-    // private static XSSFSheet getSheet(String fileName) {
+            Row currentRow = sheet.getRow(index);
+            //size of ECB rows
+            String[] row = new String[currentRow.getPhysicalNumberOfCells()];
+            
+            for(int i = 0; i < currentRow.getPhysicalNumberOfCells(); i++){
+                row[i] = df.formatCellValue(currentRow.getCell(i));
+            }
+            return row;
+            
+        } else {
+            String[] fail = new String[]{"Index Out of Bounds"};
+            return fail;
+        }
+    }
 
+    /*
+     * returns the row at the desired index,
+     * if row is out of bounds it returns the header row at index 0.
+     * 
+     */
+    public String[] getRow(String key) {
+        // rows 0 and 1 are headers
+        if(lookup.containsKey(key)){
 
-    // }
+            Row currentRow = lookup.get(key);
+            //size of ECB rows
+            String[] row = new String[currentRow.getPhysicalNumberOfCells()];
+            
+            for(int i = 0; i < currentRow.getPhysicalNumberOfCells(); i++){
+                row[i] = df.formatCellValue(currentRow.getCell(i));
+            }
+            return row;
+            
+        } else {
+            String[] fail = new String[]{"Index Out of Bounds"};
+            return fail;
+        }
+    }
+    private void sheetToHash(){
+        Iterator<Row> rowIt = sheet.rowIterator();
+        int count = 0;
+
+        // pass headers
+        rowIt.next();
+        rowIt.next();
+
+        //Iterate through all rows
+        while (rowIt.hasNext()) {
+            Row row = rowIt.next();
+            String key = df.formatCellValue(row.getCell(0)).substring(0, 4) + df.formatCellValue(row.getCell(1));
+
+            lookup.put(key, row);
+            count++;
+            }
+    }
 }
 
 
-// while (rowIt.hasNext()) {
-// Row row = rowIt.next();
-// System.out.println("\n row: " + row.getRowNum());
-// if (row.getRowNum() > 10) {
-// break;
-// }
+
 
 
 // // iterate on cells
