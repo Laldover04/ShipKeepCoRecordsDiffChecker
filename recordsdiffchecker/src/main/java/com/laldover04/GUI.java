@@ -13,27 +13,27 @@ import javax.swing.JTextField;
 
 
 public class GUI implements ActionListener {
-    private int windowWidth = 600;
-    private int windowHeight = 400;
+    private final int windowWidth = 600;
+    private final int windowHeight = 400;
 
 
-    private JFrame frame;
-    private JPanel panel;
+    private final JFrame frame;
+    private final JPanel panel;
 
 
-    private JLabel resultLabel;
-    private JLabel titleLabel;
-    private JLabel transactionLookupLabel;
-    private JLabel spaInputLabel;
-    private JLabel serviceCodeInputLabel;
+    private final JLabel resultLabel;
+    private final JLabel titleLabel;
+    private final JLabel transactionLookupLabel;
+    private final JLabel spaInputLabel;
+    private final JLabel serviceCodeInputLabel;
 
 
-    private JButton resetButton;
-    private JButton searchButton;
+    private final JButton resetButton;
+    private final JButton searchButton;
 
 
-    private JTextField spaInput;
-    private JTextField serviceCodeInput;
+    private final JTextField spaInput;
+    private final JTextField serviceCodeInput;
 
 
     public GUI() {

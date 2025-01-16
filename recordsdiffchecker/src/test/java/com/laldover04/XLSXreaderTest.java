@@ -103,7 +103,7 @@ public class XLSXreaderTest {
      */
     @Test
     public void testgetRowUnusedKey() {
-        String[] expected = new String[]{"815510000020", "DF001", "12.00", "013120", "12.50"};
+        //String[] expected = new String[]{"815510000020", "DF001", "12.00", "013120", "12.50"};
         String[] row = myXreader.getRow("815551DF001");
         for(int i = 0; i < 5; i++){
             assertTrue(row[0].equals("Invalid SPA or Service Code") && row.length == 1);

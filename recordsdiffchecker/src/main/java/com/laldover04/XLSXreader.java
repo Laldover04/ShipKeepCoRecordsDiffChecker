@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
+
 public class XLSXreader {
     private Sheet sheet;
     private DataFormatter df;
@@ -157,14 +158,14 @@ public class XLSXreader {
 
 
                 if(!tarCharge.equals(ecbCharge)){
-                    //add to csv after checking the next
-                }
-                
-                // new charge column
-                tarCharge = df.formatCellValue(tarRow.getCell(2));
-                ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
-                if(!tarCharge.equals(ecbCharge)){
-                    //add to csv with previous if it was false
+                    
+                } else {
+                    // new charge column
+                    tarCharge = df.formatCellValue(tarRow.getCell(2));
+                    ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
+                    if(!tarCharge.equals(ecbCharge)){
+                        //add to csv with previous if it was false
+                    }
                 }
 
             } else {

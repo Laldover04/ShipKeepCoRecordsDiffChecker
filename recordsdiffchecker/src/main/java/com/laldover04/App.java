@@ -5,14 +5,16 @@ package com.laldover04;
  */
 public class App {
     public static void main(String[] args) {
-        XLSXreader tarXreader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_TAR.xlsx");
-        XLSXreader ecbXreader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_ECB.xlsx");
-        // String[] expected = new String[]{"815510000020", "DF001", "12.00", "013120", "12.50"};
-        // String[] row = tarXreader.getRow("815510000020DF001");
-        // printArray(row);
-        System.out.println(" ");
+        // XLSXreader tarXreader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_TAR.xlsx");
+        // XLSXreader ecbXreader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_ECB.xlsx");
+        // // String[] expected = new String[]{"815510000020", "DF001", "12.00", "013120", "12.50"};
+        // // String[] row = tarXreader.getRow("815510000020DF001");
+        // // printArray(row);
+        // System.out.println(" ");
 
-        tarXreader.reportDiff(ecbXreader);
+        // tarXreader.reportDiff(ecbXreader);
+
+        CSVWriterHandler handler = new CSVWriterHandler("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\differences.csv");
 
     }
 
