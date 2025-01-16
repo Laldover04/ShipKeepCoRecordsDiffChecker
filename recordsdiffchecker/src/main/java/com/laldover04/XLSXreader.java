@@ -72,34 +72,33 @@ public class XLSXreader {
             }
     }
 
+    // /*
+    //  * returns the row at the desired index, 
+    //  * if row is out of bounds it returns the header row at index 0.
+    //  * NO LONGER USED, REPLACE BY GETROW()
+    //  * 
+    //  */
+    // public String[] rowToArray(int index) {
+    //     // rows 0 and 1 are headers
+    //     if(index < sheet.getPhysicalNumberOfRows() && index > 1){
+
+    //         Row currentRow = sheet.getRow(index);
+    //         //size of ECB rows
+    //         String[] row = new String[currentRow.getPhysicalNumberOfCells()];
+            
+    //         for(int i = 0; i < currentRow.getPhysicalNumberOfCells(); i++){
+    //             row[i] = df.formatCellValue(currentRow.getCell(i));
+    //         }
+    //         return row;
+            
+    //     } else {
+    //         String[] fail = new String[]{"Index Out of Bounds"};
+    //         return fail;
+    //     }
+    // }
 
     /*
-     * returns the row at the desired index, 
-     * if row is out of bounds it returns the header row at index 0.
-     * NO LONGER USED, REPLACE BY GETROW()
-     * 
-     */
-    public String[] rowToArray(int index) {
-        // rows 0 and 1 are headers
-        if(index < sheet.getPhysicalNumberOfRows() && index > 1){
-
-            Row currentRow = sheet.getRow(index);
-            //size of ECB rows
-            String[] row = new String[currentRow.getPhysicalNumberOfCells()];
-            
-            for(int i = 0; i < currentRow.getPhysicalNumberOfCells(); i++){
-                row[i] = df.formatCellValue(currentRow.getCell(i));
-            }
-            return row;
-            
-        } else {
-            String[] fail = new String[]{"Index Out of Bounds"};
-            return fail;
-        }
-    }
-
-    /*
-     * returns the row at the desired index,
+     * returns the row at the desired key,
      * if row is out of bounds it returns the header row at index 0.
      * 
      */
@@ -117,7 +116,7 @@ public class XLSXreader {
             return row;
             
         } else {
-            String[] fail = new String[]{"Index Out of Bounds"};
+            String[] fail = new String[]{"Invalid SPA or Service Code"};
             return fail;
         }
     }
@@ -130,19 +129,3 @@ public class XLSXreader {
 
     }
 }
-
-
-
-
-
-
-
-// // iterate on cells
-// Iterator<Cell> cellIt = row.cellIterator();
-// while (cellIt.hasNext()) {
-// Cell cell = cellIt.next();
-// System.out.println(cell.getNumericCellValue());
-// }
-
-
-// }
