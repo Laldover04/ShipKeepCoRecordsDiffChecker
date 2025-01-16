@@ -1,7 +1,5 @@
 package com.laldover04;
 
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,6 +34,7 @@ public class XLSXreader {
                 sheet = wb.getSheetAt(0);
                 lookup = new HashMap<>();
                 sheetToHash();
+
             }
 
 
@@ -43,7 +42,6 @@ public class XLSXreader {
             //System.out.println("exception!");
             e.printStackTrace();
         }
-
 
     }
 
@@ -64,37 +62,9 @@ public class XLSXreader {
             row = rowIt.next();
             String key = df.formatCellValue(row.getCell(0)) + df.formatCellValue(row.getCell(1));
 
-            // if(lookup.containsKey(key)){
-            //     System.out.println(key + " : duplicate key");
-            // }
             lookup.put(key, row);
         }
     }
-
-    // /*
-    //  * returns the row at the desired index, 
-    //  * if row is out of bounds it returns the header row at index 0.
-    //  * NO LONGER USED, REPLACE BY GETROW()
-    //  * 
-    //  */
-    // public String[] rowToArray(int index) {
-    //     // rows 0 and 1 are headers
-    //     if(index < sheet.getPhysicalNumberOfRows() && index > 1){
-
-    //         Row currentRow = sheet.getRow(index);
-    //         //size of ecb rows
-    //         String[] row = new String[currentRow.getPhysicalNumberOfCells()];
-            
-    //         for(int i = 0; i < currentRow.getPhysicalNumberOfCells(); i++){
-    //             row[i] = df.formatCellValue(currentRow.getCell(i));
-    //         }
-    //         return row;
-            
-    //     } else {
-    //         String[] fail = new String[]{"Index Out of Bounds"};
-    //         return fail;
-    //     }
-    // }
 
     /*
      * returns the row at the desired key,
@@ -184,6 +154,13 @@ public class XLSXreader {
      */
     public Sheet getSheet(){
         return sheet;
+    }
+
+    /*
+     * returns the hashmap
+     */
+    public HashMap<String, Row> getHashMap(){
+        return lookup;
     }
 
 
