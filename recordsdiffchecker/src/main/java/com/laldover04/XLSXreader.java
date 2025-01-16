@@ -16,9 +16,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 
 public class XLSXreader {
-    Sheet sheet;
-    DataFormatter df;
-    HashMap<String, Row> lookup;
+    private Sheet sheet;
+    private DataFormatter df;
+    //CHANGE TODO CHANGE TO PRIVATE ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    public HashMap<String, Row> lookup;
 
     public XLSXreader(String filePath) {
 
@@ -36,6 +37,7 @@ public class XLSXreader {
                 
                 // sheet
                 sheet = wb.getSheetAt(0);
+                lookup = new HashMap<>();
                 sheetToHash();
             }
 
@@ -47,6 +49,29 @@ public class XLSXreader {
 
 
     }
+
+    /*
+     * Reads each row into a hashtable "lookup" with the SPA + Service Code as the key.
+     */
+    private void sheetToHash(){
+        Iterator<Row> rowIt = sheet.rowIterator();
+        int count = 0;
+
+        // pass headers
+        rowIt.next();
+        rowIt.next();
+        System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
+
+        //Iterate through all rows
+        while (rowIt.hasNext()) {
+            Row row = rowIt.next();
+            String key = df.formatCellValue(row.getCell(0)) + df.formatCellValue(row.getCell(1));
+
+            lookup.put(key, row);
+            count++;
+            }
+    }
+
 
     /*
      * returns the row at the desired index, 
@@ -96,24 +121,17 @@ public class XLSXreader {
             return fail;
         }
     }
-    private void sheetToHash(){
-        Iterator<Row> rowIt = sheet.rowIterator();
-        int count = 0;
 
-        // pass headers
-        rowIt.next();
-        rowIt.next();
+    
+    /*
+     * Compares the rows from one input XLSX to this XLSX, with this as the source of truth.
+     */
+    public void reportDiff(XLSXreader other){
 
-        //Iterate through all rows
-        while (rowIt.hasNext()) {
-            Row row = rowIt.next();
-            String key = df.formatCellValue(row.getCell(0)).substring(0, 4) + df.formatCellValue(row.getCell(1));
-
-            lookup.put(key, row);
-            count++;
-            }
     }
 }
+
+
 
 
 
