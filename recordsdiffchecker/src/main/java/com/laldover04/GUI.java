@@ -13,32 +13,34 @@ import javax.swing.JTextField;
 
 
 public class GUI implements ActionListener {
-    private final int windowWidth = 600;
-    private final int windowHeight = 400;
-
+    private final int windowWidth = 1000;
+    private final int windowHeight = 700;
 
     private final JFrame frame;
     private final JPanel panel;
 
-
     private final JLabel resultLabel;
+    private final JLabel resultTitleLabel;
     private final JLabel titleLabel;
     private final JLabel transactionLookupLabel;
     private final JLabel spaInputLabel;
     private final JLabel serviceCodeInputLabel;
 
-
     private final JButton resetButton;
     private final JButton searchButton;
-
 
     private final JTextField spaInput;
     private final JTextField serviceCodeInput;
 
+    private final XLSXreader tarReader;
+    private final XLSXreader ecbReader;
+
 
     public GUI() {
         //Setup XLSX to be used by the buttons
-
+		tarReader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_TAR.xlsx");
+        ecbReader = new XLSXreader("C:\\Users\\lukes\\OneDrive\\Documents\\GitHub\\ShipKeepCoRecordsDiffChecker\\recordsdiffchecker\\ServiceCodes_ECB.xlsx");
+		
         // Initial setup
         panel = new JPanel();
         frame = new JFrame();
@@ -95,17 +97,20 @@ public class GUI implements ActionListener {
         searchButton.addActionListener(this);
         panel.add(searchButton);
 
-
         // Reset Button
         resetButton = new JButton("reset");
         resetButton.setBounds(windowWidth / 10, 210, 80, 25);
         resetButton.addActionListener(this);
         panel.add(resetButton);
 
+        // Lookup Results label
+        resultTitleLabel = new JLabel("SPA      Service Code     Record Desc     Charge     New Charge");
+        resultTitleLabel.setBounds(windowWidth / 5 * 2, 85, 500, 25);
+        panel.add(resultTitleLabel);
 
         // Lookup Results label
         resultLabel = new JLabel("search results");
-        resultLabel.setBounds(windowWidth / 2, 115, 300, 25);
+        resultLabel.setBounds(windowWidth / 5 * 2 -20, 115, 500, 25);
         panel.add(resultLabel);
 
 
@@ -127,13 +132,22 @@ public class GUI implements ActionListener {
         } else if (e.getSource() == searchButton) {
             // sets result label to the input fields will have to be changed to use a
             // XLSXReader object to look up the row information.
-            resultLabel.setText(spaInput.getText() + " " + serviceCodeInput.getText());  //XLSXreader.getRow()
+            String[] tarRow = tarReader.getRow(spaInput.getText() + serviceCodeInput.getText());
+            String[] ecbRow = ecbReader.getRow(spaInput.getText() + serviceCodeInput.getText());
+            String searchResult = "";
+            if(tarRow.length == 1){
+                searchResult = tarRow[0];
+            } else {
+                searchResult = (tarRow[0] + "   " + tarRow[1] + "          " +  ecbRow[2] + "    " +  tarRow[2] + "       " +  tarRow[4]);
+            }
+            resultLabel.setText(searchResult);  //XLSXreader.getRow()
         }
     }
 
 
     public static void main(String[] args) {
         new GUI();
+
     }
 
 };

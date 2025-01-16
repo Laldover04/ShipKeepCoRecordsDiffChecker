@@ -90,65 +90,6 @@ public class XLSXreader {
         }
     }
 
-    
-    /*
-    CHANGe!+========================================================================================
-     * Compares the rows from one input XLSX to this XLSX, with TAR as the source of truth.
-     */
-    public void reportDiff(XLSXreader ecbReader){
-        //String key = df.formatCellValue(sheet.getRow(2).getCell(0));
-        //System.out.println(key);
-        // This gives you the SPA of the ecb xlsx file
-        //System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
-
-        //System.out.println("\n");
-
-        Sheet ecbSheet = ecbReader.getSheet();
-
-        Iterator<Row> ecbRowIt = ecbSheet.rowIterator();
-        
-        //Skip two header lines
-        ecbRowIt.next();
-        ecbRowIt.next();
-
-        Row tarRow;
-        Row ecbRow;
-        //Iterate through all rows
-        while (ecbRowIt.hasNext()) {
-            ecbRow = ecbRowIt.next();
-            String key = df.formatCellValue(ecbRow.getCell(0)) + df.formatCellValue(ecbRow.getCell(1));
-
-            if(lookup.containsKey(key)){
-                //check that the charges match
-                tarRow = lookup.get(key);
-
-                // charge columns
-                String tarCharge = df.formatCellValue(tarRow.getCell(4));
-                String ecbCharge = df.formatCellValue(ecbRow.getCell(5)).substring(1);
-
-
-                if(!tarCharge.equals(ecbCharge)){
-                    
-                } else {
-                    // new charge column
-                    tarCharge = df.formatCellValue(tarRow.getCell(2));
-                    ecbCharge = df.formatCellValue(ecbRow.getCell(3)).substring(1);
-                    if(!tarCharge.equals(ecbCharge)){
-                        //add to csv with previous if it was false
-                    }
-                }
-
-            } else {
-                //add to ecb key, 'key' from ecb does not exist in TAR
-            }
-        }
-        
-        //key = df.formatCellValue(row.getCell(0));
-        //System.out.println(key);
-        // This gives you the SPA of the ecb xlsx file
-        //System.out.println(df.formatCellValue(sheet.getRow(2).getCell(0)));
-    }
-
     /*
      * returns the sheet
      */
