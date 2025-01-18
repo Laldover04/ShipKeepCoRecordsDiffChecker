@@ -39,7 +39,6 @@ public class DiffCheckerTest {
 
 }
 
-
     /**
      * Tests that all rows reported in the file have one of 3 possible erros
      */

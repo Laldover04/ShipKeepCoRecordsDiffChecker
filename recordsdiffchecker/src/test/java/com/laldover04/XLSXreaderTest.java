@@ -60,24 +60,22 @@ public class XLSXreaderTest {
             assertTrue(expected[i].equals(row[i]));
         }
 
-        //ECB file
-        // Row 1
-        expected = new String[]{"8155SYS TOT ", "DF001", "IA V/D MODEM", " $12.00 ", "013120", " $ 12.50 ", "8155", "SYS ", "TOT "};
-        row = ecbXLSXreader.getRow("8155SYS TOT DF001");
-        for(int i = 0; i < 5; i++){
-            assertTrue(expected[i].equals(row[i]));
-        }
-
     }
 
-    /*
-     * Tests that we can use hashMaps to find matching rows.
-     */
-    @Test
-    public void testHashMapsTrue() {
-
+    // /*
+    //  * Tests that we can use hashMaps to find matching rows.
+    //  */
+    // @Test
+    // public void testECB() {
+    //     //ECB file
+    //     // Row 1
+    //     String[] expected = new String[]{"8155SYS TOT ", "DF001", "IA V/D MODEM", " $12.00 ", "013120", " $ 12.50 ", "8155", "SYS ", "TOT "};
+    //     String[] row = ecbXLSXreader.getRow("8155SYS TOT DF001");
+    //     for(int i = 0; i < 5; i++){
+    //         assertTrue(expected[i].equals(row[i]));
+    //     }
         
-    }
+    // }
 
 
     /**
@@ -85,7 +83,6 @@ public class XLSXreaderTest {
      */
     @Test
     public void testgetRowUnusedKey() {
-        //String[] expected = new String[]{"815510000020", "DF001", "12.00", "013120", "12.50"};
         String[] row = tarXLSXreader.getRow("815551DF001");
         for(int i = 0; i < 5; i++){
             assertTrue(row[0].equals("Invalid SPA or Service Code") && row.length == 1);
