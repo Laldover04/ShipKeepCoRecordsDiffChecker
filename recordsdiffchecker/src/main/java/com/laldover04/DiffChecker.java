@@ -13,14 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import com.opencsv.CSVWriter;
 
 
-//Databases
-//oracle instead of file reader
-// think about security
-//real situation ideas
-//just use hashmap
-//csv is easier
-// make it more versatile
-// Think about what the input is
+
 
 public class DiffChecker {
 	private CSVWriter writer;
